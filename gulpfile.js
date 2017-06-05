@@ -127,7 +127,7 @@ gulp.task('js', () => {
 
 pug
 gulp.task('pug', () => {
-  gulp.src(path.dev + 'pug/**/*.pug')
+  gulp.src(path.pub + 'pug/**/*.pug')
   .pipe(pug({
     pretty: true
   }))
@@ -146,9 +146,9 @@ gulp.task('copyDev', () => {
 
 gulp.task('watch', () => {
   gulp.watch(path.pub + '**/*.html',['html'])
+  gulp.watch(path.pub + 'pug/**/*.pug',['pug']);
   gulp.watch(path.dev + 'sass/**/*.scss',['scss']);
   gulp.watch(path.dev + 'js/**/*.js',['js']);
-  gulp.watch(path.dev + 'pug/**/*.pug',['pug']);
   gulp.watch(path.dev + 'img/**/*',['image']);
 });
 gulp.task('default', ['watch', 'browserSync', 'clean', 'image']);
