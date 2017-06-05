@@ -1,5 +1,1 @@
-$(function(){
-	$('body').on('click',function(){
-		alert('hello!!');
-	});
-});
+$(function(){$("body").on("click",function(){alert("hello!!")})});
