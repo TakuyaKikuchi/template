@@ -48,28 +48,28 @@ gulp.task("browserSync", () => {
   browserSync({
     notify: false,
     server: {
-      baseDir: 'htdocs/'
+      baseDir: 'htdocs_dev/'
     },
     startPath: '/',
     middleware: [
     ssi({
-      baseDir: "htdocs/",
+      baseDir: "htdocs_dev/",
       ext: ".html"
     })
     ]
   });
   // htmlに変更があった時リロード
-  gulp.watch(path.top + '**/*.html', function() {
+  gulp.watch(path.pub + '**/*.html', function() {
     console.log('ブラウザリロード！');
     browserSync.reload();
   });
   // cssに変更があった時リロード
-  gulp.watch(path.dist + '/css/**/*.css', function() {
+  gulp.watch(path.dev + '/css/**/*.css', function() {
     console.log('ブラウザリロード！');
     browserSync.reload();
   });
   // jsに変更があった時リロード
-  gulp.watch(path.dist + '/js/**/*.js', function() {
+  gulp.watch(path.dev + '/js/**/*.js', function() {
     console.log('ブラウザリロード！');
     browserSync.reload();
   });
