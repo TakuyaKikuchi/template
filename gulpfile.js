@@ -3,40 +3,31 @@ var gulp = require('gulp');
 var source = require('vinyl-source-stream');
 var plumber = require('gulp-plumber');
 var browserSync = require('browser-sync');
-
+var notify = require("gulp-notify");
 // html
 var htmlhint = require('gulp-htmlhint');
-
+var pug = require('gulp-pug');
 // Sass
 var sass = require('gulp-sass');
 var minify = require('gulp-minify-css');
 var autoprefixer = require('gulp-autoprefixer');
 var concat = require('gulp-concat');
 var ssi = require('connect-ssi');
-
-// csscomb
+var pleeease = require('gulp-pleeease');
 var csscomb = require('gulp-csscomb');
-
-// pug
-var pug = require('gulp-pug');
-
-// JSのminify
+// JS
 var uglify = require("gulp-uglify");
-
-// babel
 var babel = require("gulp-babel");
-
 // image
+var clean = require('gulp-clean');
+var vinylPaths = require('vinyl-paths');
 var changed = require('gulp-changed');
 var imagemin = require('gulp-imagemin');
 var pngquant  = require('imagemin-pngquant');
-
-// del
+var cached = require('gulp-cached');
 var del = require('del');
-var clean = require('gulp-clean');
-var vinylPaths = require('vinyl-paths');
 
-const path = {
+var path = {
   dist: 'htdocs/assets/',
   top: 'htdocs/',
   dev: 'htdocs_dev/assets/',
@@ -44,49 +35,40 @@ const path = {
 }
 
 // BrowserSync
-gulp.task("browserSync", () => {
+gulp.task("browserSync", function() {
   browserSync({
     notify: false,
     server: {
-      baseDir: 'htdocs_dev/'
+      baseDir: path.pub,
     },
+    open: 'external',
     startPath: '/',
     middleware: [
     ssi({
-      baseDir: "htdocs_dev/",
+      baseDir: path.pub,
       ext: ".html"
     })
     ]
   });
-  // htmlに変更があった時リロード
-  gulp.watch(path.pub + '**/*.html', function() {
-    console.log('ブラウザリロード！');
-    browserSync.reload();
-  });
-  // cssに変更があった時リロード
-  gulp.watch(path.dev + '/css/**/*.css', function() {
-    console.log('ブラウザリロード！');
-    browserSync.reload();
-  });
-  // jsに変更があった時リロード
-  gulp.watch(path.dev + '/js/**/*.js', function() {
-    console.log('ブラウザリロード！');
+  gulp.watch(path.pub + '**/*', function() {
     browserSync.reload();
   });
 });
 
 // html
-gulp.task('html', () => {
+gulp.task('html', function() {
   console.log('ok');
   gulp.src(path.pub + '**/*.html')
+  .pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
   .pipe(htmlhint())
   .pipe(gulp.dest(path.top + ''))
 })
 
 // Sass
-gulp.task('scss', () => {
+gulp.task('scss', function() {
   gulp.src(path.dev + 'sass/**/*.scss')
-  .pipe(plumber())
+  .pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
+  .pipe(cached('scss'))
   .pipe(csscomb())
   .pipe(sass({
     outputStyle: 'expanded'
@@ -100,14 +82,16 @@ gulp.task('scss', () => {
 });
 
 // del
-gulp.task('clean', () => {
+gulp.task('clean', function() {
   del([path.dist + 'img/**/*']);
 });
 
 // images
-gulp.task('image', () => {
+gulp.task('image', function() {
   gulp.src(path.dev + 'img/**/*')
-  .pipe(changed(path.dev + 'img/**/*'))
+  .pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
+  .pipe(cached('image'))
+  .pipe(changed(path.dist + 'img/**/*'))
   .pipe(imagemin({
     use: [pngquant()],
     progressive: true,
@@ -117,25 +101,25 @@ gulp.task('image', () => {
 });
 
 // JS
-gulp.task('js', () => {
+gulp.task('js', function() {
   gulp.src(path.dev + 'js/**/*.js')
-  .pipe(plumber())
+  .pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
   .pipe(babel())
   .pipe(uglify())
-  .pipe(gulp.dest(path.dist + 'js'));
+  .pipe(gulp.dest(path.dist + 'js'))
 });
 
-pug
-gulp.task('pug', () => {
+// pug
+gulp.task('pug', function() {
   gulp.src(path.pub + 'pug/**/*.pug')
+  .pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
   .pipe(pug({
     pretty: true
   }))
   .pipe(gulp.dest(path.top + ''));
 });
 
-
-gulp.task('copyDev', () => {
+gulp.task('copyDev', function() {
   gulp.src([path.dist + 'css/*'])
   .pipe(gulp.dest(path.top + 'css'));
   gulp.src([path.dist + 'image/*'])
@@ -144,7 +128,7 @@ gulp.task('copyDev', () => {
   .pipe(gulp.dest(path.top + 'js'));
 });
 
-gulp.task('watch', () => {
+gulp.task('watch', function() {
   gulp.watch(path.pub + '**/*.html',['html'])
   gulp.watch(path.pub + 'pug/**/*.pug',['pug']);
   gulp.watch(path.dev + 'sass/**/*.scss',['scss']);
