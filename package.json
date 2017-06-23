@@ -30,10 +30,12 @@
     "gulp-notify": "^3.0.0",
     "gulp-pleeease": "^2.0.2",
     "gulp-plumber": "^1.1.0",
+    "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.3.2",
     "gulp-streamify": "^1.0.2",
     "gulp-uglify": "^2.1.2",
     "imagemin-pngquant": "^5.0.1",
+    "rename": "^1.0.4",
     "vinyl-buffer": "^1.0.0",
     "vinyl-paths": "^2.1.0",
     "vinyl-source-stream": "^1.1.0"
