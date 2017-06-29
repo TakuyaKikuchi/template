@@ -7,6 +7,8 @@ var plumber = require('gulp-plumber');
 var browserSync = require('browser-sync');
 var notify = require("gulp-notify");
 var rename = require("gulp-rename")
+var gutil = require('gulp-util');
+
 /* -----------------------------------------
 html
 ----------------------------------------- */
@@ -76,15 +78,28 @@ gulp.task('reload', function(){
 });
 /* -----------------------------------------
 *
-    html
+    pug
 *
 ----------------------------------------- */
-gulp.task('html', function(){
-  return gulp.src(path.dev + '**/*.html')
+gulp.task('pug', function(){
+  return gulp.src(path.dev + '**/*.pug')
   .pipe(plumber({
     errorHandler: notify.onError("Error: <%= error.message %>")
   }))
+  .pipe(pug({
+    pretty: true
+  }))
+  .pipe(rename(function (path) {
+    path.dirname = path.dirname.replace(/pug/g, '/');
+  }))
   .pipe(gulp.dest(path.pub))
+  .on('end', function(){
+    console.log('            おめでとう!!!');
+    console.log('  　(´・ω・`) 　C O M P I L E');
+    console.log('＿(__つ /￣￣￣/ 　F I N I S H E D ★');
+    console.log('   　＼/　　  /');
+    console.log('       ￣￣￣');
+  })
 });
 /* -----------------------------------------
 *
@@ -106,6 +121,13 @@ gulp.task('scss', function() {
   }))
   .pipe(minify())
   .pipe(gulp.dest(path.pub))
+  .on('end', function(){
+    console.log('            おめでとう!!!');
+    console.log('  　(´・ω・`) 　C O M P I L E');
+    console.log('＿(__つ /￣￣￣/ 　F I N I S H E D ★');
+    console.log('   　＼/　　  /');
+    console.log('       ￣￣￣');
+  })
 });
 /* -----------------------------------------
 *
@@ -146,6 +168,13 @@ gulp.task('js', function() {
   }))
   .pipe(uglify())
   .pipe(gulp.dest(path.pub))
+  .on('end', function(){
+    console.log('            おめでとう!!!');
+    console.log('  　(´・ω・`) 　C O M P I L E');
+    console.log('＿(__つ /￣￣￣/ 　F I N I S H E D ★');
+    console.log('   　＼/　　  /');
+    console.log('       ￣￣￣');
+  })
 });
 /* -----------------------------------------
 *
@@ -153,7 +182,7 @@ gulp.task('js', function() {
 *
 ----------------------------------------- */
 gulp.task('watch', function() {
-  gulp.watch(path.dev + '**/*.html',['reload', 'html']);
+  gulp.watch(path.dev + '**/*.pug',['reload', 'pug']);
   gulp.watch(path.dev + '**/*.scss',['reload', 'scss']);
   gulp.watch(path.dev + '**/*.js',['reload', 'js']);
   gulp.watch(path.dev + '**/images/*',['image']);
