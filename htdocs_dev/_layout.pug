@@ -1,0 +1,12 @@
+doctype html
+block vars
+html(lang="ja")
+  head
+    include include/_head.pug
+
+  body(class=key)
+    .l_contents
+      //- include _inc_header.pug
+      //- include _inc_nav.pug
+      block contents
+    //- include _inc_footer.pug

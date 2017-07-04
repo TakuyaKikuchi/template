@@ -8,7 +8,7 @@ var browserSync = require('browser-sync');
 var notify = require("gulp-notify");
 var rename = require("gulp-rename")
 var gutil = require('gulp-util');
-
+var notifier = require('node-notifier');
 /* -----------------------------------------
 html
 ----------------------------------------- */
@@ -40,6 +40,20 @@ var imagemin = require('gulp-imagemin');
 var pngquant  = require('imagemin-pngquant');
 var cached = require('gulp-cached');
 var del = require('del');
+/* -----------------------------------------
+error
+----------------------------------------- */
+var errormsg = function(error) {
+  notifier.notify({
+    message: error.message,
+    time: 5000,
+    sound: 'Pop',
+    title: 'エラー',
+    appIcon: __dirname + '/data/icon.png'
+  }, function() {
+    console.log(error.message);
+  });
+};
 /* -----------------------------------------
 root path
 ----------------------------------------- */
@@ -82,10 +96,8 @@ gulp.task('reload', function(){
 *
 ----------------------------------------- */
 gulp.task('pug', function(){
-  return gulp.src(path.dev + '**/*.pug')
-  .pipe(plumber({
-    errorHandler: notify.onError("Error: <%= error.message %>")
-  }))
+  return gulp.src(path.dev + '**/!(_)*.pug')
+  .pipe(plumber({errorHandler:errormsg}))
   .pipe(pug({
     pretty: true
   }))
@@ -108,9 +120,7 @@ gulp.task('pug', function(){
 ----------------------------------------- */
 gulp.task('scss', function() {
   return gulp.src(path.dev + '**/*.scss')
-  .pipe(plumber({
-    errorHandler: notify.onError("Error: <%= error.message %>")
-  }))
+  .pipe(plumber({errorHandler:errormsg}))
   .pipe(csscomb())
   .pipe(sass())
   .pipe(rename(function (path) {
@@ -144,9 +154,7 @@ gulp.task('clean', function() {
 ----------------------------------------- */
 gulp.task('image', function() {
   return gulp.src(path.dev + '**/images/*')
-  .pipe(plumber({
-    errorHandler: notify.onError("Error: <%= error.message %>")
-  }))
+  .pipe(plumber({errorHandler:errormsg}))
   .pipe(cached('image'))
   .pipe(changed(path.pub + '**/images/*'))
   .pipe(imagemin({
@@ -163,9 +171,7 @@ gulp.task('image', function() {
 ----------------------------------------- */
 gulp.task('js', function() {
   return gulp.src(path.dev + '**/*.js')
-  .pipe(plumber({
-    errorHandler: notify.onError("Error: <%= error.message %>")
-  }))
+  .pipe(plumber({errorHandler:errormsg}))
   .pipe(uglify())
   .pipe(gulp.dest(path.pub))
   .on('end', function(){
