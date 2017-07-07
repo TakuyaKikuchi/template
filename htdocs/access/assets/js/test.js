@@ -1,0 +1,2 @@
+$(function(){$("body").on("click",function(){})}),$(function(){$("body").on("click",function(){})}),$(function(){$("body").on("click",function(){})}),$(function(){$("body").on("click",function(){})}),$(function(){$("body").on("click",function(){})});
+//# sourceMappingURL=access/assets/js/test.js.map
