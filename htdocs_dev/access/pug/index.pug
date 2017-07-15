@@ -1,0 +1,12 @@
+extends ../../_layout.pug
+
+block vars
+  include ../../_config.pug
+  - var key = "access"
+  - var page = pages[key]
+
+block contents
+  h2 #{page.title}
+  .keyvisual_container
+    p.keyvisual_image
+      img(src=image_path+"/top/top_keyvisual.jpg", alt="")
