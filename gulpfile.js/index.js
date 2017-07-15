@@ -93,7 +93,7 @@ gulp.task('pug', function(){
     path.dirname = path.dirname.replace(/pug/g, '/');
   }))
   .pipe(gulp.dest(path.pub))
-  .on('end', function(){
+  .on('finish', function(){
     console.log('            おめでとう!!!');
     console.log('  　(´・ω・`) 　C O M P I L E');
     console.log('＿(__つ /￣￣￣/ 　F I N I S H E D ★');
@@ -121,7 +121,7 @@ gulp.task('scss', function() {
   }))
   .pipe(minify())
   .pipe(gulp.dest(path.pub))
-  .on('end', function(){
+  .on('finish', function(){
     console.log('            おめでとう!!!');
     console.log('  　(´・ω・`) 　C O M P I L E');
     console.log('＿(__つ /￣￣￣/ 　F I N I S H E D ★');
@@ -168,7 +168,7 @@ gulp.task('js', function() {
   }))
   .pipe(uglify())
   .pipe(gulp.dest(path.pub))
-  .on('end', function(){
+  .on('finish', function(){
     console.log('            おめでとう!!!');
     console.log('  　(´・ω・`) 　C O M P I L E');
     console.log('＿(__つ /￣￣￣/ 　F I N I S H E D ★');
